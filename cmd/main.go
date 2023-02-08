@@ -4,6 +4,7 @@ import (
 	"log"
 	"training-combobulator/config"
 	"training-combobulator/dal"
+	"training-combobulator/handlers"
 )
 
 func main() {
@@ -20,5 +21,6 @@ func main() {
 		log.Fatalf("failed to connected to database: %s", err.Error())
 	}
 	log.Println("connected to database")
-	log.Printf("%+v\n", dbClient)
+
+	handlers.SomeHandler(dbClient)
 }

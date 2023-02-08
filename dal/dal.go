@@ -4,31 +4,35 @@ import (
 	"encoding/json"
 	"os"
 	"training-combobulator/config"
+	"training-combobulator/models"
 )
 
-type dataAccess struct {
-	Users []User
+type database struct {
+	users []models.User
 }
 
-type User struct {
-	Id        uint32 `json:"id"`
-	FirstName string `json:"name_first"`
-	LastName  string `json:"name_last"`
-}
-
-func Connect(cfg *config.Database) (*dataAccess, error) {
+func Connect(cfg *config.Database) (*database, error) {
 	usersBytes, err := os.ReadFile(cfg.UsersDataPath)
 	if err != nil {
 		return nil, err
 	}
 
-	var users []User
+	var users []models.User
 	err = json.Unmarshal(usersBytes, &users)
 	if err != nil {
 		return nil, err
 	}
 
-	return &dataAccess{
-		Users: users,
+	return &database{
+		users: users,
 	}, nil
+}
+
+func (db *database) FindUserByName(first, last string) *models.User {
+	for _, user := range db.users {
+		if user.FirstName == first && user.LastName == last {
+			return &user
+		}
+	}
+	return nil
 }
