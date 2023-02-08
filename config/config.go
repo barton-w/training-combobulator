@@ -1,19 +1,27 @@
 package config
 
-// Establish the app's config
+// Establish the app's configuration
 // Should the app interface with an external database or services
-// this would represent targets, ports, auth
+// this would represent targets, ports, auth, etc by type
 type config struct {
-	exercisesDataPath string
-	usersDataPath     string
-	workoutsDataPath  string
+	Database *Database
 }
 
-func AppConfig() (*config, error) {
+type Database struct {
+	ExercisesDataPath string
+	UsersDataPath     string
+	WorkoutsDataPath  string
+}
+
+// NewConfig returns the application's configuration object
+func NewConfig() (*config, error) {
 	// TODO read config kvs from environment
-	return &config{
-		exercisesDataPath: "dal/data/exercises.json",
-		usersDataPath:     "dal/data/users.json",
-		workoutsDataPath:  "dal/data/workouts.json",
-	}, nil
+	cfg := &config{
+		Database: &Database{
+			ExercisesDataPath: "dal/data/exercises.json",
+			UsersDataPath:     "dal/data/users.json",
+			WorkoutsDataPath:  "dal/data/workouts.json",
+		},
+	}
+	return cfg, nil
 }
