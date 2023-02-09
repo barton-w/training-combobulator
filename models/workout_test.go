@@ -2,6 +2,7 @@ package models
 
 import (
 	"testing"
+	"time"
 )
 
 func TestWithWorkoutUserId(t *testing.T) {
@@ -68,4 +69,30 @@ func TestMultiOption(t *testing.T) {
 		t.Fail()
 		t.Logf("TestMultiOption failed. expected: %v, got: %v", expectedUserId, *option.UserId)
 	}
+}
+
+func TestUnmarshalJSON(t *testing.T) {
+	wd := &WorkoutDateTime{}
+	expected := time.Date(2016, 1, 25, 17, 7, 33, 0, time.UTC)
+	valid := []byte(`"2016-01-25 17:07:33"`)
+	invalid := []byte(`"23-15-00385 34:12"`)
+	err := wd.UnmarshalJSON(valid)
+
+	if err != nil {
+		t.Fail()
+		t.Logf("TestUnmarshalJSON failed with error: %s", err.Error())
+	}
+
+	if wd.Time != expected {
+		t.Fail()
+		t.Logf("TestUnmarshalJSON failed. expected: %v, got: %v", expected, wd.Time)
+	}
+
+	err = wd.UnmarshalJSON(invalid)
+
+	if err == nil {
+		t.Fail()
+		t.Logf("TestUnmarshalJSON failed, error expected")
+	}
+
 }

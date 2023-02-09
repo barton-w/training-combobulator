@@ -1,9 +1,11 @@
 package models
 
+import "time"
+
 // Workout defines the data model for individual workout records
 type Workout struct {
-	UserId            uint32 `json:"user_id"`
-	DatetimeCompleted string `json:"datetime_completed"`
+	UserId            uint32          `json:"user_id"`
+	DatetimeCompleted WorkoutDateTime `json:"datetime_completed"`
 	Blocks            []Block
 }
 
@@ -17,6 +19,21 @@ type Block struct {
 type Set struct {
 	Reps   uint32  `json:"reps"`
 	Weight *uint32 `json:"weight"`
+}
+
+// To conform to the datetime_completed format in the datasource
+// we need a custom type wrapper and unmarshalling logic
+type WorkoutDateTime struct {
+	time.Time
+}
+
+func (t *WorkoutDateTime) UnmarshalJSON(b []byte) error {
+	date, err := time.Parse(`"2006-01-02 15:04:05"`, string(b))
+	if err != nil {
+		return err
+	}
+	t.Time = date
+	return nil
 }
 
 // WorkoutQueryOptions and its associated setting functions
