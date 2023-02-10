@@ -6,11 +6,19 @@ import (
 	"training-combobulator/models"
 )
 
+func getTestDbConfig() *config.Database {
+	return &config.Database{
+		ExercisesDataPath: "../test/data/testExercises.json",
+		UsersDataPath:     "../test/data/testUsers.json",
+		WorkoutsDataPath:  "../test/data/testWorkouts.json",
+	}
+}
+
 func TestConnect(t *testing.T) {
 	// Error conditions
-	cfg, _ := config.NewConfig()
-	cfg.Database.ExercisesDataPath = "/nodir/nofile.json"
-	da, err := Connect(cfg.Database)
+	cfg := getTestDbConfig()
+	cfg.ExercisesDataPath = "/nodir/nofile.json"
+	da, err := Connect(cfg)
 
 	if err == nil {
 		t.Fail()
@@ -22,9 +30,9 @@ func TestConnect(t *testing.T) {
 		t.Logf("TestConnect failed. expected nil, got %v", da)
 	}
 
-	cfg, _ = config.NewConfig()
-	cfg.Database.UsersDataPath = "/nodir/nofile.json"
-	da, err = Connect(cfg.Database)
+	cfg = getTestDbConfig()
+	cfg.UsersDataPath = "/nodir/nofile.json"
+	da, err = Connect(cfg)
 
 	if err == nil {
 		t.Fail()
@@ -36,9 +44,9 @@ func TestConnect(t *testing.T) {
 		t.Logf("TestConnect failed. expected nil, got %v", da)
 	}
 
-	cfg, _ = config.NewConfig()
-	cfg.Database.UsersDataPath = "/nodir/nofile.json"
-	da, err = Connect(cfg.Database)
+	cfg = getTestDbConfig()
+	cfg.UsersDataPath = "/nodir/nofile.json"
+	da, err = Connect(cfg)
 
 	if err == nil {
 		t.Fail()
@@ -50,9 +58,9 @@ func TestConnect(t *testing.T) {
 		t.Logf("TestConnect failed. expected nil, got %v", da)
 	}
 
-	cfg, _ = config.NewConfig()
-	cfg.Database.WorkoutsDataPath = "/nodir/nofile.json"
-	da, err = Connect(cfg.Database)
+	cfg = getTestDbConfig()
+	cfg.WorkoutsDataPath = "/nodir/nofile.json"
+	da, err = Connect(cfg)
 
 	if err == nil {
 		t.Fail()
@@ -65,13 +73,8 @@ func TestConnect(t *testing.T) {
 	}
 
 	// Success
-	cfg, _ = config.NewConfig()
-	cfg.Database = &config.Database{
-		ExercisesDataPath: "../test/data/testExercises.json",
-		UsersDataPath:     "../test/data/testUsers.json",
-		WorkoutsDataPath:  "../test/data/testWorkouts.json",
-	}
-	da, err = Connect(cfg.Database)
+	cfg = getTestDbConfig()
+	da, err = Connect(cfg)
 
 	if err != nil {
 		t.Fail()
@@ -85,13 +88,8 @@ func TestConnect(t *testing.T) {
 }
 
 func TestFindUsers(t *testing.T) {
-	cfg, _ := config.NewConfig()
-	cfg.Database = &config.Database{
-		ExercisesDataPath: "../test/data/testExercises.json",
-		UsersDataPath:     "../test/data/testUsers.json",
-		WorkoutsDataPath:  "../test/data/testWorkouts.json",
-	}
-	da, _ := Connect(cfg.Database)
+	cfg := getTestDbConfig()
+	da, _ := Connect(cfg)
 
 	expectedById := models.User{
 		Id:        1,
@@ -118,13 +116,8 @@ func TestFindUsers(t *testing.T) {
 }
 
 func TestFindExercises(t *testing.T) {
-	cfg, _ := config.NewConfig()
-	cfg.Database = &config.Database{
-		ExercisesDataPath: "../test/data/testExercises.json",
-		UsersDataPath:     "../test/data/testUsers.json",
-		WorkoutsDataPath:  "../test/data/testWorkouts.json",
-	}
-	da, _ := Connect(cfg.Database)
+	cfg := getTestDbConfig()
+	da, _ := Connect(cfg)
 
 	expectedById := models.Exercise{
 		Id:    3,
@@ -149,13 +142,8 @@ func TestFindExercises(t *testing.T) {
 }
 
 func TestFindWorkouts(t *testing.T) {
-	cfg, _ := config.NewConfig()
-	cfg.Database = &config.Database{
-		ExercisesDataPath: "../test/data/testExercises.json",
-		UsersDataPath:     "../test/data/testUsers.json",
-		WorkoutsDataPath:  "../test/data/testWorkouts.json",
-	}
-	da, _ := Connect(cfg.Database)
+	cfg := getTestDbConfig()
+	da, _ := Connect(cfg)
 
 	userIdResult := da.FindWorkouts(models.NewWorkoutQueryOptions(models.WithWorkoutUserId(1)))
 	if len(userIdResult) != 2 {
