@@ -1,0 +1,130 @@
+[
+    {
+        "user_id": 1,
+        "datetime_completed": "2023-01-05 06:42:13",
+        "blocks": [
+            {
+                "exercise_id": 3,
+                "sets": [
+                    {
+                        "reps": 3,
+                        "weight": 0
+                    },
+                    {
+                        "reps": 6,
+                        "weight": 100
+                    }
+                ]
+            },
+            {
+                "exercise_id": 4,
+                "sets": [
+                    {
+                        "reps": 1,
+                        "weight": 1000
+                    },
+                    {
+                        "reps": 2,
+                        "weight": null
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "user_id": 1,
+        "datetime_completed": "2023-02-25 17:07:33",
+        "blocks": [
+            {
+                "exercise_id": 3,
+                "sets": [
+                    {
+                        "reps": 5,
+                        "weight": 100
+                    },
+                    {
+                        "reps": 10,
+                        "weight": null
+                    }
+                ]
+            },
+            {
+                "exercise_id": 4,
+                "sets": [
+                    {
+                        "reps": 1,
+                        "weight": 500
+                    },
+                    {
+                        "reps": 2,
+                        "weight": 600
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "user_id": 2,
+        "datetime_completed": "2023-01-05 06:42:13",
+        "blocks": [
+            {
+                "exercise_id": 3,
+                "sets": [
+                    {
+                        "reps": 3,
+                        "weight": 0
+                    },
+                    {
+                        "reps": 6,
+                        "weight": 100
+                    }
+                ]
+            },
+            {
+                "exercise_id": 4,
+                "sets": [
+                    {
+                        "reps": 1,
+                        "weight": 1000
+                    },
+                    {
+                        "reps": 2,
+                        "weight": null
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "user_id": 2,
+        "datetime_completed": "2023-02-25 17:07:33",
+        "blocks": [
+            {
+                "exercise_id": 3,
+                "sets": [
+                    {
+                        "reps": 5,
+                        "weight": 100
+                    },
+                    {
+                        "reps": 10,
+                        "weight": null
+                    }
+                ]
+            },
+            {
+                "exercise_id": 4,
+                "sets": [
+                    {
+                        "reps": 1,
+                        "weight": 500
+                    },
+                    {
+                        "reps": 2,
+                        "weight": 600
+                    }
+                ]
+            }
+        ]
+    }
+]
