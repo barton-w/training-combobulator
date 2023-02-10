@@ -1,5 +1,10 @@
 package config
 
+import (
+	"fmt"
+	"os"
+)
+
 // Establish the app's configuration
 // Should the app interface with an external database or services
 // this would represent targets, ports, auth, etc by type
@@ -15,12 +20,26 @@ type Database struct {
 
 // NewConfig returns the application's configuration object
 func NewConfig() (*config, error) {
-	// TODO read config kvs from environment
+	ep := os.Getenv("EXERCISES_PATH")
+	if ep == "" {
+		return nil, fmt.Errorf("EXERCISES_PATH required")
+	}
+
+	up := os.Getenv("USERS_PATH")
+	if up == "" {
+		return nil, fmt.Errorf("USERS_PATH required")
+	}
+
+	wp := os.Getenv("WORKOUTS_PATH")
+	if wp == "" {
+		return nil, fmt.Errorf("WORKOUTS_PATH required")
+	}
+
 	cfg := &config{
 		Database: &Database{
-			ExercisesDataPath: "dal/data/exercises.json",
-			UsersDataPath:     "dal/data/users.json",
-			WorkoutsDataPath:  "dal/data/workouts.json",
+			ExercisesDataPath: ep,
+			UsersDataPath:     up,
+			WorkoutsDataPath:  wp,
 		},
 	}
 	return cfg, nil
