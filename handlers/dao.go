@@ -14,9 +14,9 @@ type dao interface {
 	FindWorkouts(opt models.WorkoutQueryOptions) []models.Workout
 }
 
-// MonthlyTotals and Totals are data structures to aggregate
-// workout by month
-type MonthlyTotals map[time.Month]Totals
+// YearlyTotals and Totals are data structures to aggregate
+// workout data by year and month
+type YearlyTotals map[int]map[time.Month]Totals
 
 type Totals struct {
 	totalReps   uint32

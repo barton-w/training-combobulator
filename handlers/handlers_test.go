@@ -52,103 +52,111 @@ func TestGetExerciseTotalWeight(t *testing.T) {
 	}
 }
 
-func TestGetUserMonthlyExerciseTotals(t *testing.T) {
+func TestGetUserYearlyExerciseTotals(t *testing.T) {
 	// Errors
 	dao := &mockDaoMultiReturn{}
-	result, err := GetUserMonthlyExerciseTotals(dao, "first", "last", "someExercise", 2023)
+	result, err := GetUserYearlyExerciseTotals(dao, "first", "last", "someExercise")
 
 	if err == nil {
 		t.Fail()
-		t.Logf("TestGetUserMonthlyExerciseTotals failed. expected error, got nil")
+		t.Logf("TestGetUserYearlyExerciseTotals failed. expected error, got nil")
 	}
 
 	if len(result) > 0 {
 		t.Fail()
-		t.Logf("TestGetUserMonthlyExerciseTotals failed. unexpected return value")
+		t.Logf("TestGetUserYearlyExerciseTotals failed. unexpected return value")
 	}
 
 	// Success
 	da, err := dal.Connect(getTestDbConfig())
-	expected := MonthlyTotals{
-		time.January:  Totals{totalReps: 9, totalWeight: 600},  //calculated from the test data
-		time.February: Totals{totalReps: 15, totalWeight: 500}, //calculated from the test data
+	expected := YearlyTotals{
+		2023: map[time.Month]Totals{
+			time.January:  {totalReps: 9, totalWeight: 600},  //calculated from the test data
+			time.February: {totalReps: 15, totalWeight: 500}, //calculated from the test data
+		},
 	}
-	result, err = GetUserMonthlyExerciseTotals(da, "Alfred", "Music", "Bicep Curls", 2023)
+	result, err = GetUserYearlyExerciseTotals(da, "Alfred", "Music", "Bicep Curls")
 
 	if err != nil {
 		t.Fail()
-		t.Logf("TestGetUserMonthlyExerciseTotals failed. unexpected error: %s", err.Error())
+		t.Logf("TestGetUserYearlyExerciseTotals failed. unexpected error: %s", err.Error())
 	}
 
-	if result[time.January] != expected[time.January] && result[time.February] != expected[time.February] {
+	if result[2023][time.January] != expected[2023][time.January] && result[2023][time.February] != expected[2023][time.February] {
 		t.Fail()
-		t.Logf("TestGetExerciseTotalWeight failed. expected: %v, got: %v", expected, result)
+		t.Logf("TestGetUserYearlyExerciseTotals failed. expected: %v, got: %v", expected, result)
 	}
 }
 
-func TestGetMaxMonthWeight(t *testing.T) {
+func TestGetMaxWeightMonths(t *testing.T) {
 	// Error
-	mt := MonthlyTotals{}
-	expected := ""
-	result, err := GetMaxMonthWeight(mt)
+	yt := YearlyTotals{}
+	result, err := GetMaxWeightMonths(yt)
 
 	if err == nil {
 		t.Fail()
-		t.Logf("TestGetMaxMonthWeight failed. expected error, got nil")
+		t.Logf("GetMaxWeightMonths failed. expected error, got nil")
 	}
 
-	if result != expected {
+	if len(result) > 0 {
 		t.Fail()
-		t.Logf("TestGetMaxMonthWeight failed. expected: %v, got: %v", expected, result)
+		t.Logf("GetMaxWeightMonths failed. unexpected response: %v", result)
 	}
 
-	mt[time.January] = Totals{totalWeight: 100}
-	mt[time.February] = Totals{totalWeight: 200}
-	mt[time.March] = Totals{totalWeight: 68}
-	expected = "February"
-	result, err = GetMaxMonthWeight(mt)
+	yt[2022] = map[time.Month]Totals{
+		time.January:  {totalWeight: 100},
+		time.February: {totalWeight: 200},
+	}
+	yt[2023] = map[time.Month]Totals{
+		time.August:  {totalWeight: 999},
+		time.October: {totalWeight: 68},
+	}
+	result, err = GetMaxWeightMonths(yt)
 
 	if err != nil {
 		t.Fail()
-		t.Logf("TestGetMaxMonthWeight failed. unexpected error: %s", err.Error())
+		t.Logf("GetMaxWeightMonths failed. unexpected error: %s", err.Error())
 	}
 
-	if result != expected {
+	if result[2022] != "February" || result[2023] != "August" {
 		t.Fail()
-		t.Logf("TestGetMaxMonthWeight failed. expected: %v, got: %v", expected, result)
+		t.Logf("GetMaxWeightMonths failed. incorrect data returned")
 	}
 }
 
-func TestGetTotalWeight(t *testing.T) {
+func TestGetTotalYearlyWeight(t *testing.T) {
 	// Error
-	mt := MonthlyTotals{}
-	var expected uint32
-	result, err := GetTotalWeight(mt)
+	yt := YearlyTotals{}
+	result, err := GetTotalYearlyWeight(yt)
 
 	if err == nil {
 		t.Fail()
-		t.Logf("TestGetTotalWeight failed. expected error, got nil")
+		t.Logf("TestGetTotalYearlyWeight failed. expected error, got nil")
 	}
 
-	if result != expected {
+	if len(result) > 0 {
 		t.Fail()
-		t.Logf("TestGetTotalWeight failed. expected: %v, got: %v", expected, result)
+		t.Logf("TestGetTotalYearlyWeight failed. unexpected response: %v", result)
 	}
 
-	mt[time.January] = Totals{totalWeight: 100}
-	mt[time.February] = Totals{totalWeight: 200}
-	mt[time.March] = Totals{totalWeight: 68}
-	expected = uint32(368)
-	result, err = GetTotalWeight(mt)
+	yt[2022] = map[time.Month]Totals{
+		time.January:  {totalWeight: 100},
+		time.February: {totalWeight: 200},
+	}
+	yt[2023] = map[time.Month]Totals{
+		time.August:  {totalWeight: 999},
+		time.October: {totalWeight: 68},
+	}
+	result, err = GetTotalYearlyWeight(yt)
 
 	if err != nil {
 		t.Fail()
-		t.Logf("TestGetTotalWeight failed. unexpected error: %s", err.Error())
+		t.Logf("TestGetTotalYearlyWeight failed. unexpected error: %s", err.Error())
 	}
 
-	if result != expected {
+	if result[2022] != uint32(300) && result[2023] != uint32(1067) {
 		t.Fail()
-		t.Logf("TestGetTotalWeight failed. expected: %v, got: %v", expected, result)
+		t.Logf("TestGetTotalYearlyWeight failed. incorrect data returned")
 	}
 }
 
