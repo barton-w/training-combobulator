@@ -5,6 +5,7 @@ import (
 	"time"
 	"training-combobulator/config"
 	"training-combobulator/dal"
+	"training-combobulator/models"
 )
 
 // For these tests I could also implement a fairly extensive mock
@@ -180,5 +181,62 @@ func TestGetUserPR(t *testing.T) {
 	if result != expected {
 		t.Fail()
 		t.Logf("TestGetUserPR failed. expected: %v, got: %v", expected, result)
+	}
+}
+
+func TestMaxWeight(t *testing.T) {
+	w1 := uint32(100)
+	w2 := uint32(200)
+	w3 := uint32(300)
+	w4 := uint32(400)
+
+	b := []models.Block{
+		{
+			Sets: []models.Set{
+				{Weight: &w1}, {Weight: &w2}, {},
+			},
+		},
+		{
+			Sets: []models.Set{
+				{Weight: &w4}, {Weight: &w3},
+			},
+		},
+	}
+	result := maxWeight(b)
+
+	if result != w4 {
+		t.Fail()
+		t.Logf("TestMaxWeight failed. expected: %v, got: %v", w4, result)
+	}
+}
+
+func TestBlockTotals(t *testing.T) {
+	w1 := uint32(100)
+	w2 := uint32(200)
+	w3 := uint32(300)
+	w4 := uint32(400)
+
+	b := []models.Block{
+		{
+			Sets: []models.Set{
+				{Reps: 1, Weight: &w1}, {Reps: 2, Weight: &w2}, {Reps: 3},
+			},
+		},
+		{
+			Sets: []models.Set{
+				{Reps: 1, Weight: &w4}, {Reps: 2, Weight: &w3},
+			},
+		},
+	}
+
+	expected := Totals{
+		totalReps:   9,
+		totalWeight: 1500,
+	}
+	result := blockTotals(b)
+
+	if result != expected {
+		t.Fail()
+		t.Logf("TestMaxWeight failed. expected: %v, got: %v", expected, result)
 	}
 }
