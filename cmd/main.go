@@ -32,7 +32,7 @@ func main() {
 
 	// The intent is that handlers could be converted to http route handlers,
 	// parsing client query data to fetch various results.
-	// While these handlers are built to answer the questions in the assignment,
+	// While these handlers do answer the questions in the assignment,
 	// they are user and exercise agnostic, and can also provide time based aggregations
 
 	// q1 - In total, how many pounds have these athletes Bench Pressed?
